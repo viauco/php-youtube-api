@@ -133,12 +133,12 @@ class Youtube
      * @return \StdClass
      * @throws \Exception
      */
-    public function getVideoInfo($vId)
+    public function getVideoInfo($vId, $part = 'id, snippet, contentDetails, player, statistics, status')
     {
         $API_URL = $this->getApi('videos.list');
         $params = array(
             'id' => $vId,
-            'part' => 'id, snippet, contentDetails, player, statistics, status'
+            'part' => $part, //'id, snippet, contentDetails, player, statistics, status'
         );
 
         $apiData = $this->api_get($API_URL, $params);

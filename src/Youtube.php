@@ -151,13 +151,13 @@ class Youtube
      * @return \StdClass
      * @throws \Exception
      */
-    public function getVideosInfo($vIds)
+    public function getVideosInfo($vIds, $part = 'id, snippet, contentDetails, player, statistics, status')
     {
         $ids = is_array($vIds) ? implode(',', $vIds) : $vIds;
         $API_URL = $this->getApi('videos.list');
         $params = array(
             'id' => $ids,
-            'part' => 'id, snippet, contentDetails, player, statistics, status'
+            'part' => $part
         );
 
         $apiData = $this->api_get($API_URL, $params);
@@ -173,11 +173,11 @@ class Youtube
      * @param int $maxResults
      * @return array
      */
-    public function search($q, $maxResults = 10)
+    public function search($q, $maxResults = 10, $part = 'id, snippet')
     {
         $params = array(
             'q' => $q,
-            'part' => 'id, snippet',
+            'part' => $part,
             'maxResults' => $maxResults
         );
         return $this->searchAdvanced($params);
@@ -192,12 +192,12 @@ class Youtube
      * @param  string $order Order by
      * @return \StdClass  API results
      */
-    public function searchVideos($q, $maxResults = 10, $order = null)
+    public function searchVideos($q, $maxResults = 10, $order = null, $part = 'id, snippet')
     {
         $params = array(
             'q' => $q,
             'type' => 'video',
-            'part' => 'id, snippet',
+            'part' => $part,
             'maxResults' => $maxResults
         );
         if (!empty($order)) {
@@ -217,13 +217,13 @@ class Youtube
      * @param  string $order
      * @return object
      */
-    public function searchChannelVideos($q, $channelId, $maxResults = 10, $order = null)
+    public function searchChannelVideos($q, $channelId, $maxResults = 10, $order = null, $part = 'id, snippet')
     {
         $params = array(
             'q' => $q,
             'type' => 'video',
             'channelId' => $channelId,
-            'part' => 'id, snippet',
+            'part' => $part,
             'maxResults' => $maxResults
         );
         if (!empty($order)) {
@@ -234,14 +234,14 @@ class Youtube
     }
 
 
-    public function searchChannelLiveStream($q, $channelId, $maxResults = 10, $order = null)
+    public function searchChannelLiveStream($q, $channelId, $maxResults = 10, $order = null, $part = 'id, snippet')
     {
         $params = array(
             'q' => $q,
             'type' => 'video',
             'eventType' => 'live',
             'channelId' => $channelId,
-            'part' => 'id, snippet',
+            'part' => $part,
             'maxResults' => $maxResults
         );
 
@@ -304,12 +304,12 @@ class Youtube
      * @return \StdClass
      * @throws \Exception
      */
-    public function getChannelByName($username, $optionalParams = false)
+    public function getChannelByName($username, $optionalParams = false, $part = 'id,snippet,contentDetails,statistics,invideoPromotion')
     {
         $API_URL = $this->getApi('channels.list');
         $params = array(
             'forUsername' => $username,
-            'part' => 'id,snippet,contentDetails,statistics,invideoPromotion'
+            'part' => $part
         );
         if ($optionalParams) {
             $params = array_merge($params, $optionalParams);
@@ -324,12 +324,12 @@ class Youtube
      * @return \StdClass
      * @throws \Exception
      */
-    public function getChannelById($id, $optionalParams = false)
+    public function getChannelById($id, $optionalParams = false, $part = 'id,snippet,contentDetails,statistics,invideoPromotion')
     {
         $API_URL = $this->getApi('channels.list');
         $params = array(
             'id' => $id,
-            'part' => 'id,snippet,contentDetails,statistics,invideoPromotion'
+            'part' => $part
         );
         if ($optionalParams) {
             $params = array_merge($params, $optionalParams);
@@ -343,12 +343,12 @@ class Youtube
      * @return \StdClass
      * @throws \Exception
      */
-    public function getChannelsById($ids = array(), $optionalParams = false)
+    public function getChannelsById($ids = array(), $optionalParams = false, $part = 'id,snippet,contentDetails,statistics,invideoPromotion')
     {
         $API_URL = $this->getApi('channels.list');
         $params = array(
             'id' => implode(',', $ids),
-            'part' => 'id,snippet,contentDetails,statistics,invideoPromotion'
+            'part' => $part
         );
         if($optionalParams){
             $params = array_merge($params, $optionalParams);
@@ -363,12 +363,12 @@ class Youtube
      * @return array
      * @throws \Exception
      */
-    public function getPlaylistsByChannelId($channelId, $optionalParams = array())
+    public function getPlaylistsByChannelId($channelId, $optionalParams = array(), $part = 'id, snippet, status')
     {
         $API_URL = $this->getApi('playlists.list');
         $params = array(
             'channelId' => $channelId,
-            'part' => 'id, snippet, status'
+            'part' => $part
         );
         if ($optionalParams) {
             $params = array_merge($params, $optionalParams);
@@ -383,12 +383,12 @@ class Youtube
      * @return \StdClass
      * @throws \Exception
      */
-    public function getPlaylistById($id)
+    public function getPlaylistById($id, $part = 'id, snippet, status')
     {
         $API_URL = $this->getApi('playlists.list');
         $params = array(
             'id' => $id,
-            'part' => 'id, snippet, status'
+            'part' => $part
         );
         $apiData = $this->api_get($API_URL, $params);
         return $this->decodeSingle($apiData);
@@ -400,11 +400,11 @@ class Youtube
      * @return array
      * @throws \Exception
      */
-    public function getPlaylistItemsByPlaylistId($playlistId, $maxResults = 50)
+    public function getPlaylistItemsByPlaylistId($playlistId, $maxResults = 50, $part = 'id, snippet, contentDetails, status')
     {
         $params = array(
             'playlistId' => $playlistId,
-            'part' => 'id, snippet, contentDetails, status',
+            'part' => $part,
             'maxResults' => $maxResults
         );
         return $this->getPlaylistItemsByPlaylistIdAdvanced($params);
@@ -442,7 +442,7 @@ class Youtube
      * @return array
      * @throws \Exception
      */
-    public function getActivitiesByChannelId($channelId, $optionalParams = false)
+    public function getActivitiesByChannelId($channelId, $optionalParams = false, $part = 'id, snippet, contentDetails')
     {
         if (empty($channelId)) {
             throw new \InvalidArgumentException('ChannelId must be supplied');
@@ -450,7 +450,7 @@ class Youtube
         $API_URL = $this->getApi('activities');
         $params = array(
             'channelId' => $channelId,
-            'part' => 'id, snippet, contentDetails'
+            'part' => $part
         );
         if ($optionalParams) {
             $params = array_merge($params, $optionalParams);
